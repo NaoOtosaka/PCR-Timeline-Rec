@@ -36,13 +36,13 @@ Sub 按钮10_Click()
         Debug.Print buffTime
         
         r = rg.Row
-        C = rg.Column
+        c = rg.Column
         
         Debug.Print r
-        Debug.Print C
+        Debug.Print c
         
-        Sheets("本体").Cells(r, C + 3).Value = data
-        Sheets("本体").Cells(r, C + 14).Value = buffTime
+        Sheets("本体").Cells(r, c + 3).Value = data
+        Sheets("本体").Cells(r, c + 14).Value = buffTime
         
 con:
     Next
