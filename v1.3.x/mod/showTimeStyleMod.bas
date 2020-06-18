@@ -1,11 +1,11 @@
-Attribute VB_Name = "时间显示风格"
-Public timeStyle As Boolean 'true为秒数 false为直读
+Attribute VB_Name = "showTimeStyleMod"
 Sub 按钮43_Click()
-
+    timeStyle = Sheets("_Sheet1").Range("T14").Value
     timeLine = Range("C36:AG36")
     
     If timeStyle Then
         Range("H35").Value = "直读模式"
+        Range("A36").Value = "130s-51s"
         Rem 标签设定
         Tag = 130
         Rem 循环
@@ -15,9 +15,11 @@ Sub 按钮43_Click()
         Next i
 
         timeStyle = False
+        Sheets("_Sheet1").Range("T14").Value = 0
         
     Else
         Range("H35").Value = "秒数模式"
+        Range("A36").Value = "90s-51s"
         Rem 标签设定
         Tag = 90
         Rem 循环
@@ -27,6 +29,7 @@ Sub 按钮43_Click()
         Next i
         
         timeStyle = True
+        Sheets("_Sheet1").Range("T14").Value = 1
     End If
 End Sub
 

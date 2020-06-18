@@ -1,5 +1,7 @@
-Attribute VB_Name = "快速填充"
+Attribute VB_Name = "skillQuickFillMod"
 Public Function quickFill(in_skillName, in_skillTime, in_startRow)
+    
+    timeStyle = Sheets("_Sheet1").Range("T14").Value
     
     '完整性校验
     If IsEmpty(Range(in_skillName)) Then
@@ -68,7 +70,19 @@ Public Function quickFill(in_skillName, in_skillTime, in_startRow)
         buffTime = 1
     End If
     
-    
+    '风格判定
+    If timeStyle Then
+        If startTime > 90 Then
+            MsgBox "输入不符合当前时间模式"
+            End
+        End If
+    Else
+        If startTime > 60 And startTime < 100 Then
+            MsgBox "输入不符合当前时间模式"
+            End
+        End If
+    End If
+        
     '输入值处理
     If startTime = "" Then
         MsgBox "未输入开始时间"
@@ -104,7 +118,7 @@ Public Function quickFill(in_skillName, in_skillTime, in_startRow)
     '循环填充
     For i = 0 To buffTime - 1 Step 1
         '换行
-        If (locationC + i) > 42 Then
+        If (locationC + i - temp) > 42 Then
             locationR = locationR + 44
             locationC = 3
             temp = i

@@ -1,6 +1,8 @@
 Attribute VB_Name = "UB快速填充"
 Public Function ubQuickFill(in_skillName, in_skillTime, in_timeArr, in_startRow)
-
+    
+    timeStyle = Sheets("_Sheet1").Range("T14").Value
+    
     'ub数据读取
     skillName = Range(in_skillName).Value
     
@@ -53,6 +55,17 @@ Public Function ubQuickFill(in_skillName, in_skillTime, in_timeArr, in_startRow)
         temp = 0
         
         startTime = r
+        
+        '风格判定
+        If timeStyle Then
+            If startTime > 90 Then
+                startTime = startTime - 40
+            End If
+        Else
+            If startTime > 60 And startTime < 100 Then
+                startTime = startTime + 40
+            End If
+        End If
         
         '时间轴坐标初始化
         If startTime >= 51 Then
