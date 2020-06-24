@@ -45,7 +45,7 @@ Private Sub ListBox1_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
 End Sub
 
 Private Sub TextBox1_KeyUp(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
-    Dim i&, j%, t%, myStr$, k&, N$, P$
+    Dim i&, j%, t%, myStr$, K&, N$, P$
     Dim LG As Boolean, arr1()
     On Error Resume Next
     Me.ListBox1.Clear
@@ -54,10 +54,10 @@ Private Sub TextBox1_KeyUp(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift A
         If Asc(Mid$(myStr, i, 1)) < 0 Then LG = True: Exit For
     Next
     arr2 = Array("ID", "½ÇÉ«Ãû", "Î»ÖÃ")
-    k = k + 1
-    ReDim arr1(1 To 3, 1 To k)
+    K = K + 1
+    ReDim arr1(1 To 3, 1 To K)
     For i = 1 To 3
-        arr1(i, k) = arr2(i - 1)
+        arr1(i, K) = arr2(i - 1)
     Next
     For i = 1 To UBound(arrsj)
         s = arrsj(i, 1) & arrsj(i, 2) & arrsj(i, 3)
@@ -71,10 +71,10 @@ Private Sub TextBox1_KeyUp(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift A
             Next
         End If
         If InStr(N, myStr) Then
-            k = k + 1
-            ReDim Preserve arr1(1 To 3, 1 To k)
+            K = K + 1
+            ReDim Preserve arr1(1 To 3, 1 To K)
             For t = 1 To 3
-                arr1(t, k) = arrsj(i, t)
+                arr1(t, K) = arrsj(i, t)
             Next
         End If
     Next i

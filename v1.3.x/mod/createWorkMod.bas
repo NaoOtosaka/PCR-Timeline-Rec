@@ -11,6 +11,8 @@ Public Function arrNum(arr) As Boolean
     
 End Function
 Sub 出轴区_按钮1_Click()
+    Application.DisplayAlerts = False
+    
     Dim file As String, arr As Variant, i
     
     '将当前的数据读入数组
@@ -22,8 +24,31 @@ Sub 出轴区_按钮1_Click()
         
         s = InputBox("请输入保存文件名")
         
+        '新建一个对话框对象
+        Set FolderDialogObject = Application.FileDialog(msoFileDialogFolderPicker)
+        
+        '配置对话框
+        With FolderDialogObject
+        
+            .Title = "请选择要查找的文件夹"
+        
+            .InitialFileName = ThisWorkbook.Path
+        
+        End With
+        
+        '显示对话框
+        
+        FolderDialogObject.Show
+        
+        '获取选择对话框选择的文件夹
+        
+        Set paths = FolderDialogObject.SelectedItems
+        
+        '错误抑制
+        On Error GoTo pathErr
+        
         '定义文本文件的名称
-        file = ThisWorkbook.Path & "\txt\" & s & "_" & d & ".txt"
+        file = paths(1) & "\" & s & "_" & d & ".txt"
         
         '判断是否存在同名文本文件，存在先行删除
         If Dir(file) <> "" Then Kill file
@@ -58,6 +83,12 @@ Sub 出轴区_按钮1_Click()
         Close #1
         
     End If
+    
+    Application.DisplayAlerts = True
+    Exit Sub
+pathErr:
+    MsgBox "未选择路径，本次导出已取消"
+    Exit Sub
 End Sub
 Sub 出轴区_按钮2_Click()
 
@@ -66,6 +97,10 @@ Sub 出轴区_按钮2_Click()
 End Sub
 Sub 出轴区_按钮3_Click()
 Dim dic As Object
+
+    Sheets("出轴区").Range("A1:G65536").ClearContents
+
+    timeStyle = Sheets("_Sheet1").Range("T14").Value
     
     Dim ubTimeArr As Variant
 
@@ -73,27 +108,38 @@ Dim dic As Object
 
     Set dic = CreateObject("Scripting.Dictionary")
     
+    Dim workName As String
+    
+    workName = Sheets("出轴区").Range("I3").Value
+    
+    If workName = "" Then
+        
+        MsgBox "请选择工作表！"
+        Exit Sub
+        
+    End If
+    
     For i = 0 To 4
     
         For v = 0 To 33
     
-            If Sheets("本体").Cells(i + 11, v + 5).Value = "" Then
+            If Sheets(workName).Cells(i + 11, v + 5).Value = "" Then
             
                 Exit For
             
             End If
     
-            If Not dic.exists(Sheets("本体").Cells(i + 11, v + 5).Value) Then
+            If Not dic.exists(Sheets(workName).Cells(i + 11, v + 5).Value) Then
             
-                dic.Add Sheets("本体").Cells(i + 11, v + 5).Value, CreateObject("Scripting.Dictionary")
+                dic.Add Sheets(workName).Cells(i + 11, v + 5).Value, CreateObject("Scripting.Dictionary")
             
             End If
             
-            Index = dic(Sheets("本体").Cells(i + 11, v + 5).Value).Count
+            Index = dic(Sheets(workName).Cells(i + 11, v + 5).Value).Count
             
-            Debug.Print Sheets("本体").Cells(i + 11, 1).Value
+            Debug.Print Sheets(workName).Cells(i + 11, 1).Value
             
-            dic(Sheets("本体").Cells(i + 11, v + 5).Value).Add Index, Sheets("本体").Cells(i + 11, 1).Value
+            dic(Sheets(workName).Cells(i + 11, v + 5).Value).Add Index, Sheets(workName).Cells(i + 11, 1).Value
             
         Next v
     
@@ -117,21 +163,29 @@ Dim dic As Object
             
             min = "1"
             
-            ubTimeTemp = ubTime - 60
-            
+            If timeStyle Then
+                ubTimeTemp = ubTime - 60
+            Else
+                ubTimeTemp = ubTime - 100
+            End If
+                    
             If ubTimeTemp < 10 Then
             
-                sec = " 0" & Right(Str(ubTimeTemp), 1)
+                sec = " 0" & Right(str(ubTimeTemp), 1)
             
             Else
             
-                sec = Str(ubTimeTemp)
+                sec = str(ubTimeTemp)
             
             End If
             
+        ElseIf ubTime >= 10 Then
+        
+            sec = str(ubTime)
+        
         Else
         
-            sec = Str(ubTime)
+            sec = " 0" & Right(str(ubTime), 1)
         
         End If
         
@@ -152,6 +206,31 @@ Dim dic As Object
         i = i + 1
     
     Next
+End Sub
+Sub 按钮6_Click()
+    
+    Dim ar(1 To 100, 1 To 1)
+    
+    Dim i As Long, j As Long
+    
+    Sheets("表").UsedRange.Offset(1).ClearContents
+    
+    For i = 1 To Sheets.Count
+        
+        If Sheets(i).Visible = xlSheetVisible Then
+            
+            If Sheets(i).Name <> "BOSS信息" And Sheets(i).Name <> "出轴区" And Sheets(i).Name <> "更新记录" Then
+                
+                j = j + 1
+                
+                Sheets("表").Cells(j, 1) = Sheets(i).Name
+                
+            End If
+            
+        End If
+        
+    Next i
+    
 End Sub
 
 
